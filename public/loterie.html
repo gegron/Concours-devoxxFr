@@ -1,0 +1,80 @@
+<html>
+<head>
+    <title>Concours Web-Tambouille pour DevoxxFr</title>
+	<link rel="stylesheet" href="css/main.css" />
+    <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+
+	$(document).ready(function () { 
+		var socket = io.connect(); 
+	
+		$("#jouer").click(function() { 
+			var nombre = $('#numero').val();
+			socket.send(nombre); 
+		}); 
+	
+		socket.on('message', function (data) { 
+			var obj = JSON.parse(data); 
+			
+			var joueurs = obj.joueurs;
+			var vainqueurs = obj.vainqueurs;
+			
+			$('#timerProchainTirage').text(obj.tpsProchainTirage);
+			$('#dernierNumeroGagnant').text(obj.dernierNombreGagnant);
+			$('.login').text(obj.joueur);
+			$('.login').val(obj.joueur);
+			$('#numeroJoueur').text(joueurs[obj.joueur]);
+			
+			
+			$('#listeJoueur').empty();
+			$('#listeGagnant').empty();
+			
+			for(var j in joueurs) {
+				$('#listeJoueur').append('<li>' + j + '</li>');
+			}
+			for(var j in vainqueurs) {
+				$('#listeGagnant').append('<li>' + vainqueurs[j] + '</li>');
+			}
+			
+			if(obj.tpsProchainTirage <= 2 || obj.tpsProchainTirage >= 13) {
+				$('#jouer').hide();
+				$('#numero').attr('disabled', true);
+			} else {
+				$('#jouer').show();
+				$('#numero').attr('disabled', false);
+			}
+		}); 
+	});
+	
+	</script>
+</head>
+<body>
+    <div>
+        <h3>Bienvenue <span class="login"></span></h3>
+		<div>
+			<h4>Liste des participants</h4>
+			<ul id="listeJoueur">
+			</ul>
+		</div>
+		
+		<div>
+			<h4>Liste des gagnants du dernier tirage (num&eacute;ro gagnant: <span id="dernierNumeroGagnant"></span>)</h4>
+			<ul id="listeGagnant">
+			</ul>
+		</div>
+		
+		<div>
+			Prochain tirage dans <span id="timerProchainTirage"></span> secondes
+		</div>
+		
+		<div>
+			<label for="numeroPourProchainTirage">Quel num&eacute;ro souhaitez-vous jouer (actuellement <span id="numeroJoueur"></span>)?</label>
+			<input id="numero" name="numero" type="text" />
+			<input class="login" name="login" type="text" hidden="true" />
+			<!--<input type="submit" value="Jouez!"/>-->
+			<button id="jouer">Jouez!</button>
+		</div>
+    </div>
+</body>
+</html>

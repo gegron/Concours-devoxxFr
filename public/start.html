@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Concours Web-Tambouille pour DevoxxFr</title>
+	<link rel="stylesheet" href="css/main.css" />
+    <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <div>
+        <h3>Veuillez choisir un login:</h3>
+		<form action="/connexionLoterie" method="get">
+			<label for="login">Login</label>
+			<input id="login" name="login" type="text" /> <br />
+			<input type="submit" value="Envoyer" />
+			<span class="error" hidden="true">Ce login est déjà utilisé, veuillez en saisir un autre. Merci.</span>
+		</form>
+    </div>
+</body>
+</html>
